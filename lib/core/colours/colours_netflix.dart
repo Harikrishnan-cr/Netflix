@@ -17,13 +17,3 @@ const buttonColourBlue = Colors.blue;
 
 
 
-//---------App Colour End --------------------
-
-
-
-
-//------------App height start --------------
-
-
-
-//------------App height End ---------------

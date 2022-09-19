@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:netflix/core/colours/colours_netflix.dart';
-import 'package:netflix/presentation/common%20screen/appbar/app_bar_widget.dart';
+
+import 'package:netflix/presentation/common%20widgets/appbar/app_bar_widget.dart';
 
 // final imageList = [
 //   'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/vUUqzWa2LnHIVqkaKVlVGkVcZIW.jpg'

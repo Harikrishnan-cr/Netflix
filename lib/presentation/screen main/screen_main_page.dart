@@ -1,8 +1,9 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:netflix/presentation/common%20widgets/bottom%20bar/bottom_bar.dart';
 
-import 'package:netflix/presentation/common%20screen/bottom%20bar/bottom_bar.dart';
+
 import 'package:netflix/presentation/download/download_screen.dart';
 import 'package:netflix/presentation/fast%20laughs/fast_and_laugh_screen.dart';
 import 'package:netflix/presentation/home/home_screen.dart';
@@ -15,7 +16,7 @@ const ScreenMAinPage({Key? key}) : super(key: key);
 
 final screens = const [
   HomeScreen(),
-  NewsAndHotScreen(),
+  NewAndHotScreen(),
   FastLaughScreen(),
   ScearchScreen(),
   DownloadScreen()

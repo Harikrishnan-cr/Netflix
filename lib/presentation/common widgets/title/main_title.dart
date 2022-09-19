@@ -1,10 +1,8 @@
 
-
-
 import 'package:flutter/cupertino.dart';
 
-class SearchTitle extends StatelessWidget {
- const SearchTitle({
+class MainTitleWidget extends StatelessWidget {
+ const MainTitleWidget({
     Key? key,
     required this.title,
   }) : super(key: key);

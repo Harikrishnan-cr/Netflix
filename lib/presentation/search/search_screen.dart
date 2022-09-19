@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix/core/height/height_netflix.dart';
 import 'package:netflix/presentation/search/widget/on%20search/on_search_screen.dart';
-import 'package:netflix/presentation/search/widget/search%20widget/search_widget.dart';
+
 
 
 
