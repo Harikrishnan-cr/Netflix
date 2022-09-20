@@ -5,4 +5,5 @@ import 'package:netflix/infrastructure/api/api_key.dart';
 
 class ApiEndPoints{
   static const downloads = '$baseUrl/trending/all/day?api_key=$apikey';
+  static const search = '$baseUrl/search/movie?api_key=$apikey';
 }

@@ -3,8 +3,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/search/search_bloc.dart';
 import 'package:netflix/core/height/height_netflix.dart';
-import 'package:netflix/presentation/search/widget/on%20search/on_search_screen.dart';
+
+import 'package:netflix/presentation/search/widget/search%20widget/search_widget.dart';
 
 
 
@@ -14,6 +17,9 @@ class ScearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<SearchBloc>(context).add(const Initialize());  
+    });
    return Scaffold(
       body: SafeArea(child: 
       Padding(
@@ -30,8 +36,8 @@ class ScearchScreen extends StatelessWidget {
 
             ),
             commonHeight,
-            // const Expanded(child:  SearchWidgetScreen())
-            const Expanded(child: OnSearchScreen())
+          const Expanded(child:  SearchWidgetScreen())    
+            // const Expanded(child: OnSearchScreen())
             // const Text('Top Search',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),)
           ],
         ),

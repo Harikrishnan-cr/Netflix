@@ -1,7 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/downloads/downloads_bloc.dart';
 import 'package:netflix/core/colours/colours_netflix.dart';
+import 'package:netflix/core/strings/base_url.dart';
 
 import 'package:netflix/presentation/common%20widgets/appbar/app_bar_widget.dart';
 
@@ -15,9 +18,13 @@ class DownloadScreen extends StatelessWidget {
   const DownloadScreen({Key? key}) : super(key: key);
 
   final _widgetList = const [
-     SizedBox(height: 3,), 
+    SizedBox(
+      height: 3,
+    ),
     _SmartDownloadWidget(),
-     SizedBox(height: 0,), 
+    SizedBox(
+      height: 0,
+    ),
     MidleSectionWidget(),
     DownloadScreenButton(),
   ];
@@ -25,13 +32,12 @@ class DownloadScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const PreferredSize(
-          
             preferredSize: Size.fromHeight(50),
             child: AppBarWidgetScreen(
               title: 'Downloads',
             )),
         body: ListView.separated(
-          padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             itemBuilder: (context, index) => _widgetList[index],
             separatorBuilder: (context, index) => const SizedBox(
                   height: 20,
@@ -51,14 +57,21 @@ class _SmartDownloadWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: const [
-        SizedBox(width: 9,),
+        SizedBox(
+          width: 9,
+        ),
         Icon(
           Icons.settings_outlined,
           color: appTextWhite,
           size: 25,
         ),
-        SizedBox(width: 10,),
-        Text('Smart Downloads',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 18),),
+        SizedBox(
+          width: 10,
+        ),
+        Text(
+          'Smart Downloads',
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+        ),
       ],
     );
   }
@@ -74,6 +87,11 @@ class MidleSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) { 
+      BlocProvider.of<DownloadsBloc>(context).add(const DownloadsEvent.getDownloadsImages());
+    });
+    // BlocProvider.of<DownloadsBloc>(context)
+    //     .add(const DownloadsEvent.getDownloadsImages());
     return Column(
       children: [
         const Text(
@@ -90,41 +108,47 @@ class MidleSectionWidget extends StatelessWidget {
           style: TextStyle(
               fontWeight: FontWeight.w500, color: appIconGrey, fontSize: 16),
         ),
-        SizedBox(
-          width: size.width,
-          height: size.width,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              CircleAvatar(
-                radius: size.width * 0.35,
-                backgroundColor: const Color.fromARGB(255, 101, 101, 101),
+        BlocBuilder<DownloadsBloc, DownloadsState>(
+          builder: (context, state) {  
+            return SizedBox(
+              width: size.width,
+              height: size.width,  
+              child:state.isLoading ? const Center(child: CircularProgressIndicator(
+                color: Colors.red, 
+              )) : Stack(
+                alignment: Alignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: size.width * 0.35,
+                    backgroundColor: const Color.fromARGB(255, 101, 101, 101),
+                  ),
+                   RotatedImageWidget(
+                    height: 0.45,
+                    width: 0.36,
+                    angle: 18,
+                    imageslist:
+                         '$appendUrl${state.download[2].posterPath}', 
+                    margin: EdgeInsets.only(left: 120, bottom: 20),
+                  ),
+                   RotatedImageWidget(
+                    height: 0.45,
+                    width: 0.36,
+                    angle: -18,
+                    imageslist:
+                        '$appendUrl${state.download[1].posterPath}',
+                    margin: const EdgeInsets.only(right: 120, bottom: 20),
+                  ),
+                   RotatedImageWidget(   
+                    height: 0.51,
+                    width: 0.36,
+                    imageslist:
+                        '$appendUrl${state.download[0].posterPath}',
+                    margin: EdgeInsets.only(top: 4),
+                  )
+                ],
               ),
-              const RotatedImageWidget(
-                height: 0.45,
-                width: 0.36,
-                angle: 18,
-                imageslist:
-                    'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/g8sclIV4gj1TZqUpnL82hKOTK3B.jpg',
-                margin: EdgeInsets.only(left: 120, bottom: 20),
-              ),
-              const RotatedImageWidget(
-                height: 0.45,
-                width: 0.36,
-                angle: -18,
-                imageslist:
-                    'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/vUUqzWa2LnHIVqkaKVlVGkVcZIW.jpg',
-                margin: EdgeInsets.only(right: 120, bottom: 20),
-              ),
-              const RotatedImageWidget(
-                height: 0.51,
-                width: 0.36,
-                imageslist:
-                    'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/1ifiV9ZJD4tC3tRYcnLIzH0meaB.jpg',
-                margin: EdgeInsets.only(top: 4),
-              )
-            ],
-          ),
+            );
+          },
         ),
       ],
     );

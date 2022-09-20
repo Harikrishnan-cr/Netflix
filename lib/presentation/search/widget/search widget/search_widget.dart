@@ -1,7 +1,9 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/search/search_bloc.dart';
 import 'package:netflix/core/colours/colours_netflix.dart';
 import 'package:netflix/core/height/height_netflix.dart';
+import 'package:netflix/core/strings/base_url.dart';
 import 'package:netflix/presentation/search/widget/title/title_search.dart';
 
 class SearchWidgetScreen extends StatelessWidget {
@@ -17,19 +19,35 @@ class SearchWidgetScreen extends StatelessWidget {
         ),
         commonHeight,
         commonHeight,
-        Expanded(
-            child: ListView.separated(
+        Expanded(child: BlocBuilder<SearchBloc, SearchState>(
+          builder: (context, state) {
+            if(state.isLoading){
+              return const Center(child: CircularProgressIndicator(),);
+            }else if(state.isError){
+              return const Center(child: Text('Error While Getting Data'),);
+            }else if(state.idlelist.isEmpty){
+return const Center(child: Text('list is empty'),);  
+            }
+            return ListView.separated(
                 shrinkWrap: true,
-                itemBuilder: (context, index) => const TopSearchList(),
+                itemBuilder: (context, index) {
+                  final movie = state.idlelist[index];
+                  
+                  return TopSearchList(imgUrl: '$appendUrl${movie.posterPath}', title: movie.title??'No title' );              
+                }, 
                 separatorBuilder: (context, index) => commonHeight20,
-                itemCount: 10)),
+                itemCount: state.idlelist.length);
+          },
+        )),
       ],
     );
   }
 }
 
 class TopSearchList extends StatelessWidget {
-  const TopSearchList({Key? key}) : super(key: key);
+  final String title;
+  final String imgUrl;
+  const TopSearchList({Key? key,required this.imgUrl,required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +56,22 @@ class TopSearchList extends StatelessWidget {
       children: [
         Container(
           width: screenWidth * 0.35,
-          height: 100,
-          decoration: const BoxDecoration(
+          height: 90,
+          decoration: BoxDecoration(
               color: Colors.purple,
-              image: DecorationImage(
+              borderRadius: BorderRadius.circular(6),
+              image:  DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                      'https://www.relianceentertainment.com//wp-content/uploads/AP-Poster-2-horizontal-scaled.jpg'))),
+                     imgUrl))),
         ),
-        const Expanded(
+        const Padding(padding: EdgeInsets.only(right: 10)),
+         Expanded(
             child: Text(
-          'Movie name',
-          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
+          title,
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),  
         )),
-        Icon(
+       const Icon(
           Icons.play_circle_outline_outlined,
           color: appTextWhite,
           size: 50,
