@@ -1,11 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:netflix/application/downloads/downloads_bloc.dart';
 import 'package:netflix/core/colours/colours_netflix.dart';
 import 'package:netflix/core/strings/base_url.dart';
-
 import 'package:netflix/presentation/common%20widgets/appbar/app_bar_widget.dart';
 
 // final imageList = [
@@ -87,9 +85,11 @@ class MidleSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) { 
-      BlocProvider.of<DownloadsBloc>(context).add(const DownloadsEvent.getDownloadsImages());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<DownloadsBloc>(context)
+          .add(const DownloadsEvent.getDownloadsImages());
     });
+    //  BlocProvider.of<DownloadsBloc>(context).add(const DownloadsEvent.getDownloadsImages());
     // BlocProvider.of<DownloadsBloc>(context)
     //     .add(const DownloadsEvent.getDownloadsImages());
     return Column(
@@ -109,45 +109,49 @@ class MidleSectionWidget extends StatelessWidget {
               fontWeight: FontWeight.w500, color: appIconGrey, fontSize: 16),
         ),
         BlocBuilder<DownloadsBloc, DownloadsState>(
-          builder: (context, state) {  
-            return SizedBox(
+          builder: (context, state) {
+            return state.download.length >5 ? SizedBox(
               width: size.width,
-              height: size.width,  
-              child:state.isLoading ? const Center(child: CircularProgressIndicator(
-                color: Colors.red, 
-              )) : Stack(
-                alignment: Alignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: size.width * 0.35,
-                    backgroundColor: const Color.fromARGB(255, 101, 101, 101),
-                  ),
-                   RotatedImageWidget(
-                    height: 0.45,
-                    width: 0.36,
-                    angle: 18,
-                    imageslist:
-                         '$appendUrl${state.download[2].posterPath}', 
-                    margin: EdgeInsets.only(left: 120, bottom: 20),
-                  ),
-                   RotatedImageWidget(
-                    height: 0.45,
-                    width: 0.36,
-                    angle: -18,
-                    imageslist:
-                        '$appendUrl${state.download[1].posterPath}',
-                    margin: const EdgeInsets.only(right: 120, bottom: 20),
-                  ),
-                   RotatedImageWidget(   
-                    height: 0.51,
-                    width: 0.36,
-                    imageslist:
-                        '$appendUrl${state.download[0].posterPath}',
-                    margin: EdgeInsets.only(top: 4),
-                  )
-                ],
-              ),
-            );
+              height: size.width,
+              child: state.isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                      color: Colors.red,
+                    ))
+                  : Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: size.width * 0.35,
+                          backgroundColor:
+                              const Color.fromARGB(255, 101, 101, 101),
+                        ),
+                        RotatedImageWidget(
+                          height: 0.45,
+                          width: 0.36,
+                          angle: 18,
+                          imageslist:
+                              '$appendUrl${state.download[0].posterPath}',
+                          margin: const EdgeInsets.only(left: 120, bottom: 20),
+                        ),
+                        RotatedImageWidget(
+                          height: 0.45,
+                          width: 0.36,
+                          angle: -18,
+                          imageslist:
+                              '$appendUrl${state.download[1].posterPath}',
+                          margin: const EdgeInsets.only(right: 120, bottom: 20),
+                        ),
+                        RotatedImageWidget(
+                          height: 0.51,
+                          width: 0.36,
+                          imageslist:
+                              '$appendUrl${state.download[2].posterPath}',
+                          margin: const EdgeInsets.only(top: 4),
+                        )
+                      ],
+                    ),
+            ) : const SizedBox();
           },
         ),
       ],

@@ -1,7 +1,12 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/home/home_bloc.dart';
 import 'package:netflix/core/colours/colours_netflix.dart';
 import 'package:netflix/core/height/height_netflix.dart';
+import 'package:netflix/core/strings/base_url.dart';
 
 import 'package:netflix/presentation/common%20widgets/Home%20screen/main_image_tile.dart';
 import 'package:netflix/presentation/home/widget/home_button.dart';
@@ -15,6 +20,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<HomeBloc>(context).add(const GetHomeScreenData());
+    });
     return Scaffold(
         body: ValueListenableBuilder(
             valueListenable: scrollNotifier,
@@ -36,26 +44,98 @@ class HomeScreen extends StatelessWidget {
                   },
                   child: Stack(
                     children: [
-                      ListView(
-                        children: [
-                          CustomHomeImage(size: size),
-                          SizedBox(
-                            height: size.height * 0.019,
-                          ),
-                          const MainCardImage(
-                            title: 'Release in the past year',
-                          ),
-                          const MainCardImage(
-                            title: 'Trending Now',
-                          ),
-                          const SpecialImageCardHome(title: 'special'),
-                          const MainCardImage(
-                            title: 'Tense Dramas',
-                          ),
-                          const MainCardImage(
-                            title: 'South Indian Cinema',
-                          ),
-                        ],
+                      BlocBuilder<HomeBloc, HomeState>(
+                        builder: (context, state) {
+                          if (state.isLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.red,
+                              ),
+                            );
+                          } else if (state.hasError) {
+                            return const Center(
+                              child: Text('Error While getting Data'),
+                            );
+                          }
+
+                          // ----------------Released Past Year ------------------
+
+                          final _pastYearMovieList =
+                              state.pastyearMovieList.map((e) {
+                            return '$appendUrl${e.posterPath}';
+                          }).toList();
+                          _pastYearMovieList.shuffle();
+
+                          //---Trending Now ---------------------
+
+                          final _trendingMovieList =
+                              state.trendingMovieList.map((e) {
+                            return '$appendUrl${e.posterPath}';
+                          }).toList();
+                          // _trendingMovieList.shuffle();
+// ---------------Tense Drams ---------------
+
+                          final _tensDramaMovieList =
+                              state.tensDramaMovieList.map((e) {
+                            return '$appendUrl${e.posterPath}';
+                          }).toList();
+                          _tensDramaMovieList.shuffle();
+
+                          //-------------South Indian ----------------
+
+                          final _southIndianMovieList =
+                              state.southIndianMovieList.map((e) {
+                            return '$appendUrl${e.posterPath}';
+                          }).toList();
+
+                          _southIndianMovieList.shuffle();
+
+                          //-----------------top 10 tv shows --------------
+
+                          final _topTenTvList = state.trendingTvList.map((t) {
+                            return '$appendUrl${t.posterPath}';
+                          }).toList();
+
+                          return ListView(
+                            children: [
+                              if (_topTenTvList.length >= 10)
+                                CustomHomeImage(
+                                  size: size,
+                                  homeImage: _topTenTvList[1],
+                                ),
+                              SizedBox(
+                                height: size.height * 0.019,
+                              ),
+                              if (_pastYearMovieList.length >= 10)
+                                MainCardImage(
+                                  posterList: _pastYearMovieList.sublist(0, 10),
+                                  title: 'Release in the past year',
+                                ),
+                              if (_trendingMovieList.length >= 10)
+                                MainCardImage(
+                                  posterList: _trendingMovieList.sublist(0, 10),
+                                  title: 'Trending Now',
+                                ),
+                              if (_topTenTvList.length >= 10)
+                                SpecialImageCardHome(
+                                    topTenUrl: _topTenTvList.sublist(0, 10),
+                                    title: 'Top 10 Tv Shows In India Today'),
+                              if (_tensDramaMovieList.length >= 10)
+                                MainCardImage(
+                                  posterList:
+                                      _tensDramaMovieList.sublist(0, 10),
+                                  title: 'Tense Dramas',
+                                ),
+                              if (_southIndianMovieList.length >= 10)
+                                MainCardImage(
+                                  posterList:
+                                      _southIndianMovieList.sublist(0, 10),
+                                  title: 'South Indian Cinema',
+                                ),
+                            ],
+                          );
+                        },
                       ),
                       scrollNotifier.value == true
                           ? AnimatedContainer(
@@ -75,7 +155,7 @@ class HomeScreen extends StatelessWidget {
                                             backgroundImage:
                                                 NetworkImage(temLogo),
                                           ),
-                                         const Spacer(),
+                                          const Spacer(),
                                           Row(
                                             children: [
                                               IconButton(
@@ -87,7 +167,11 @@ class HomeScreen extends StatelessWidget {
                                               Container(
                                                 width: 25,
                                                 height: 25,
-                                                color: Colors.blue,
+                                                decoration: const BoxDecoration(
+                                                    image: DecorationImage(
+                                                        image: NetworkImage(
+                                                            'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png'))),
+                                                // color: Colors.blue,
                                               ),
                                               const SizedBox(
                                                 width: 15,

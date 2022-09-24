@@ -30,7 +30,10 @@ final String title;
         Container(
           width: 25,
           height: 25,
-          color: Colors.blue,
+          decoration: const BoxDecoration(
+            image: DecorationImage(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png'))
+          ),
+          // color: Colors.blue,
         ),
            const SizedBox(width: 15,),
       ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:netflix/core/colours/colours_netflix.dart';
-import 'package:netflix/presentation/search/widget/on%20search/on_search_screen.dart';
+
 
 class PlayButtonHome extends StatelessWidget {
   const PlayButtonHome({
@@ -66,9 +66,11 @@ class CustomeHomeButton extends StatelessWidget {
 //-------------------image Home -------------------------
 
 class CustomHomeImage extends StatelessWidget {
+  final String homeImage;
   const CustomHomeImage({
     Key? key,
     required this.size,
+    required this.homeImage
   }) : super(key: key);
 
   final Size size;
@@ -80,10 +82,11 @@ class CustomHomeImage extends StatelessWidget {
         Container(
           height: size.height * 0.75,
           width: double.infinity,
-          decoration: const BoxDecoration(
-              color: Colors.purple,
+          decoration: BoxDecoration(   
+              color: Colors.black,
               image: DecorationImage(
-                  fit: BoxFit.fill, image: NetworkImage(temImgHome))),
+                  fit: BoxFit.fill, image: NetworkImage(homeImage))),
+                  // temImgHome
         ),
         Positioned(
           bottom: 0,

@@ -12,14 +12,14 @@ import 'package:netflix/presentation/search/search_screen.dart';
 
 
 class ScreenMAinPage extends StatelessWidget {
-const ScreenMAinPage({Key? key}) : super(key: key);
+ ScreenMAinPage({Key? key}) : super(key: key);
 
-final screens = const [
-  HomeScreen(),
-  NewAndHotScreen(),
-  FastLaughScreen(),
+final screens =  [
+  const HomeScreen(),
+  const NewAndHotScreen(),
+  const FastLaughScreen(),
   ScearchScreen(),
-  DownloadScreen()
+  const DownloadScreen()   
 ];
 
   @override

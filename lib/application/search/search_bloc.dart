@@ -20,6 +20,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       : super(SearchState.initial()) {
     //-------Idle state-------------
     on<Initialize>((event, emit) async {
+      if(state.idlelist.isNotEmpty){
+        emit( SearchState(
+          searchResultData: [], idlelist: state.idlelist, isLoading: false, isError: false));
+          return;   
+      }
       emit(const SearchState(
           searchResultData: [], idlelist: [], isLoading: true, isError: false));
       //get trending
@@ -32,7 +37,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
               isLoading: false,
               isError: true);
         },
-        (List<Downloads> list) {
+        (List<Downloads> list) {   
           return SearchState(
               searchResultData: [],    
               idlelist: list,
@@ -48,9 +53,31 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     //-------Search Result state-------------
 
-    on<SearchMovie>((event, emit) {
+    on<SearchMovie>((event, emit) async{
+
+
+       emit(const SearchState(
+          searchResultData: [], idlelist: [], isLoading: true, isError: false));
       //-----call search movie
-      _searchService.searchMovie(movieQuery: event.movieQuery);
+      final _result = await  _searchService.searchMovie(movieQuery: event.movieQuery);
+      final _state = _result.fold((MainFailure f) {
+
+ return const SearchState(
+              searchResultData: [],
+              idlelist: [],
+              isLoading: false,
+              isError: true);
+      }, (SearchResp r) {
+
+         return SearchState(
+              searchResultData: r.results,    
+              idlelist: [],
+              isLoading: false,
+              isError: false);
+
+      });
+      emit(_state);
+      
     });
   }
 }

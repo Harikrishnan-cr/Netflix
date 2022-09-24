@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:netflix/core/colours/colours_netflix.dart';
 import 'package:netflix/core/height/height_netflix.dart';
 import 'package:netflix/presentation/common%20widgets/title/main_title.dart';
-import 'package:netflix/presentation/search/widget/on%20search/on_search_screen.dart';
+
 
 class ImageMainCard extends StatelessWidget {
+  final String mainImage;
   const ImageMainCard({
     Key? key,
+    required this.mainImage
   }) : super(key: key);
 
   @override
@@ -23,9 +25,9 @@ class ImageMainCard extends StatelessWidget {
         height: 200,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4.5),
-            color: Colors.purple,
-            image:  const DecorationImage(
-                fit: BoxFit.cover, image: NetworkImage(temImg))),
+            color: Colors.black,  
+            image:   DecorationImage(
+                fit: BoxFit.cover, image: NetworkImage(mainImage))),
       ),
     );
   }
@@ -39,8 +41,10 @@ class ImageMainCard extends StatelessWidget {
 
 class MainCardImage extends StatelessWidget {
   final String title;
+  final List<String> posterList;
   const MainCardImage({
-    Key? key,required this.title
+    Key? key,required this.title,
+    required this.posterList,   
   }) : super(key: key);
 
   @override
@@ -57,7 +61,7 @@ class MainCardImage extends StatelessWidget {
         maxHeight: 200,
         child: ListView(
           scrollDirection: Axis.horizontal,
-          children: List.generate(10, (index) => const ImageMainCard())
+          children: List.generate(posterList.length, (index) => ImageMainCard(mainImage: posterList[index] ,))
         ),
       )
           ],
@@ -70,8 +74,9 @@ class MainCardImage extends StatelessWidget {
 //---------- special image card start -----------------------------
 class SpecialImageCardHome extends StatelessWidget {
   final String title;
+  final List <String> topTenUrl;
   const SpecialImageCardHome({
-    Key? key,required this.title
+    Key? key,required this.title,required this.topTenUrl
   }) : super(key: key);
 
   @override
@@ -88,7 +93,7 @@ class SpecialImageCardHome extends StatelessWidget {
         maxHeight: 200,
         child: ListView(
           scrollDirection: Axis.horizontal,
-          children: List.generate(10, (index) => SpecialImg(index: index,))
+          children: List.generate(topTenUrl.length, (index) => SpecialImg(index: index,topTenUrl: topTenUrl[index],))
         ),
       )
           ],
@@ -105,8 +110,9 @@ class SpecialImageCardHome extends StatelessWidget {
 
 class SpecialImg extends StatelessWidget {
   final int index;
+  final String topTenUrl;
   const SpecialImg({
-    Key? key,required this.index
+    Key? key,required this.index,required this.topTenUrl
   }) : super(key: key);
 
   @override
@@ -127,9 +133,9 @@ class SpecialImg extends StatelessWidget {
                 height: 200,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4.5),
-                    color: Colors.purple,
-                    image:  const DecorationImage(
-                        fit: BoxFit.cover, image: NetworkImage(temImgspcl))),
+                    color: Colors.black,
+                    image:   DecorationImage(
+                        fit: BoxFit.cover, image: NetworkImage(topTenUrl))),
               ),
             ),
           ],

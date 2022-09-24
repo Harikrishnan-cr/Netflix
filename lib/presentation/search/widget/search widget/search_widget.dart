@@ -58,7 +58,7 @@ class TopSearchList extends StatelessWidget {
           width: screenWidth * 0.35,
           height: 90,
           decoration: BoxDecoration(
-              color: Colors.purple,
+              color: Colors.black,
               borderRadius: BorderRadius.circular(6),
               image:  DecorationImage(
                   fit: BoxFit.cover,

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:netflix/application/downloads/downloads_bloc.dart';
+import 'package:netflix/application/fast_laugh/fastlaugh_bloc.dart';
+import 'package:netflix/application/home/home_bloc.dart';
+import 'package:netflix/application/hot_and_new/hotandnew_bloc.dart';
 import 'package:netflix/application/search/search_bloc.dart';
 
 import 'package:netflix/core/colours/colours_netflix.dart';
@@ -27,7 +30,23 @@ class MyApp extends StatelessWidget {
          },) ,
          BlocProvider(create: (ctx) {
            return getIt<SearchBloc>();
-         },) 
+         },),
+          BlocProvider(create: (ctx) {
+           return getIt<FastlaughBloc>();
+         },),
+
+          BlocProvider(create: (ctx) {
+           return getIt<HotandnewBloc>();
+         },),
+
+
+           BlocProvider(create: (ctx) {
+           return getIt<HomeBloc>();
+         },),
+
+
+        // FastlaughBloc
+          
       ],
       child: MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -39,8 +58,8 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(color:appTextWhite),
           )
         ),
-        home: const ScreenMAinPage(),    
-       
+        home:  ScreenMAinPage(),    
+          
       ),
     );
     

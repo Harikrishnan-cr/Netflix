@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/fast_laugh/fastlaugh_bloc.dart';
 import 'package:netflix/presentation/fast%20laughs/widget/pageview_widget.dart';
-
 
 // final videoList = [
 //    const  PageViewVideoListScreen(pageViewColour: Colors.purple,),
@@ -18,21 +18,41 @@ import 'package:netflix/presentation/fast%20laughs/widget/pageview_widget.dart';
 //           const  PageViewVideoListScreen(pageViewColour: Color.fromARGB(255, 255, 21, 0),),
 // ];
 
-
-
 class FastLaughScreen extends StatelessWidget {
   const FastLaughScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    // WidgetsBinding.instance.addPersistentFrameCallback((_) {
+    //   BlocProvider.of<FastlaughBloc>(context).add(const Initialize());      
+    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {     
+       BlocProvider.of<FastlaughBloc>(context).add(const Initialize()); 
+    });
+    return Scaffold(
+        body: SafeArea(child: BlocBuilder<FastlaughBloc, FastlaughState>(
+      builder: (context, state) {
 
-      body: SafeArea(child: PageView(
-        scrollDirection: Axis.vertical,
-        children: List.generate(10, (index) => PageViewVideoListScreen(index: index))
-      ))
+        if(state.isLoading){
+return const Center(child: CircularProgressIndicator(strokeWidth: 2,color: Colors.red,),);
+        }else if(state.isError){
+return const Center(child: Text('Error While Loading Data'),);
+        }else if(state.videosList.isEmpty){
+return const Center(child: Text('Video List Empty'),);
+        }else{
 
-      
-    );
+          return PageView(
+            scrollDirection: Axis.vertical,
+            children: List.generate(
+                state.videosList.length, (index) {
+                  return VideoListItemInheritedWidget(
+                    key: Key(index.toString()),
+                    widget: PageViewVideoListScreen(index: index), movieData: state.videosList[index]);
+                }));
+
+        }
+            
+      },
+    )));
   }
-}  
+}
